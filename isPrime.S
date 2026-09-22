@@ -6,7 +6,7 @@ isPrime:
   # if n % 2 == 0 -> return (n == 2)
   movl %edi, %eax         #%eax = n
   cltd                    #prep 64 bit signed division %edx:%eax
-  movl $2, %ecx           %ecx = 2
+  movl $2, %ecx           #%ecx = 2
   idivl %ecx              #edx = n % 2
   testl %edx, %edx        #set flags for n % 2
   jne .is_check_loop      #odd -> jump
@@ -23,8 +23,8 @@ isPrime:
   movl %edi, %eax         #%eax = n
   cltd                    #prep for 64 bit signed division
   idivl %r10d             #%edx = n % i
-  testl %edx, %edx.       #set flags for n % i
-  je .is_not_prime.       #if (n % i == 0) -> not prime
+  testl %edx, %edx        #set flags for n % i
+  je .is_not_prime        #if (n % i == 0) -> not prime
   addl $2, %r10d          #%r10d (i) += 2
   jmp .is_loop            #continue loop
 .is_prime:

@@ -3,20 +3,11 @@
 mult7div8:
     movsbl %dil, %eax       #sign-extend %dil to %eax
     imull $7, %eax          #%eax = 7 * a
-    movl %eax, %ecx         #%ecx = 7 * a (save result)
-    movsbl %dil, %eax       #sign-extend %dil to %eax for comparison
-    testl %eax, %eax        #test a
-    jg .check_a_pos         #if a > 0, check if mult < 0
-    jl .check_a_neg         #if a < 0, check if mult > 0
-    jmp .no_overflow        #a == 0, no overflow
-.check_a_pos:
-    cmpl $0, %ecx           #compare mult to 0
-    jl .set_overflow        #if mult < 0 it overflowed
-    jmp .no_overflow        #else no overflow
-.check_a_neg:
-    cmpl $0, %ecx           #compare mult to 0
-    jg .set_overflow        #if mult > 0 it overflowed
-    jmp .no_overflow        #else no overflow
+    movl %eax, %r10d        #save full product
+    movsbl %al, %ecx        #%ecx = mult as signed char
+    cmpl %ecx, %r10d        #compare full product with truncated value
+    jne .set_overflow       #different values mean overflow
+    jmp .no_overflow
 .set_overflow:
     movb $1, (%rsi)         #*overflow = 1
     jmp .do_divide          #go to divide
