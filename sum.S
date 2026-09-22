@@ -5,7 +5,15 @@
 #   offset 8  : value
 #   offset 16 : next
 sum:
-    retq
+    xorq %rax, %rax           #%rax (total) = 0
+.loop:
+    testq %rdi, %rdi
+    je .done
+    addq 8(%rdi), %rax        #%rax (total) += ptr->value
+    movq 16(%rdi), %rdi       #ptr = ptr->next
+    jmp .loop
+.done:
+    ret
 
 
 # sum of the elements of a linkedlist in C
